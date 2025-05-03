@@ -21,13 +21,19 @@ options = [ Option ['s'] ["size"]          (ReqArg Size "<num>")    "Specifies a
 numAces :: Game -> (Int,Int)
 numAces (p1,p2) = (length [card | card@(Ace,_) <- p1],length [card | card@(Ace,_) <- p2])
 
+getSize :: [Flag] -> Int
+getSize [] = 3
+getSize (Size s:_) = 
+    case readMaybe s of
+        Just size -> size
+        _ -> 3
+getSize (_:fs) = getSize fs
+
 runGame :: Game -> Int -> IO ()
 runGame ([],[]) _ = putStrLn "tie"
 runGame (_,[])  _ = putStrLn "p1 wins"
 runGame ([],_)  _ = putStrLn "p2 wins"
-runGame (p1,p2) warSize = do
-    putStrLn ((show $ length p1) ++ "," ++ (show $ length p2))
-    runGame (play (p1,p2) warSize) warSize
+runGame (p1,p2) warSize = runGame (play (p1,p2) warSize) warSize
 
 runGameV :: Game -> Int -> IO ()
 runGameV ([],[]) _ = putStrLn "tie"
@@ -38,14 +44,6 @@ runGameV (h1@(p1:_),h2@(p2:_)) warSize = do
     putStrLn ((showCard p1) ++ "," ++ (showCard p2))
     if (getCardVal p1) == (getCardVal p2) then putStrLn "war!" else return ()
     runGameV (play (h1,h2) warSize) warSize
-
-getSize :: [Flag] -> Int
-getSize [] = 3
-getSize (Size s:_) = 
-    case readMaybe s of
-        Just size -> size
-        _ -> 3
-getSize (_:fs) = getSize fs
 
 main :: IO ()
 main = do

@@ -15,6 +15,9 @@ import Data.Maybe
 gameToDeck :: Game -> Deck
 gameToDeck (p1,p2) = p1++p2
 
+occursOnce :: Eq a => [a] -> a -> Bool
+occursOnce lst a = (length [e | e <- lst,e==a])==1
+
 testDeal :: Grader String
 testDeal = assess "deal" 0 $ do 
     check "that deal creates the right length" $ all (==52) [length $ gameToDeck game | game <- decks] `shouldBe` True
@@ -24,12 +27,18 @@ testDeal = assess "deal" 0 $ do
         decks = [deal deck [] [] | i <- [1..100]]
         noDupes :: Game -> Bool
         noDupes ([],[]) = True
-        noDupes ([],_)  = error "lists are of unequal length"
-        noDupes (_,[])  = error "lists are of unequal length"
-        noDupes ((p1:p1s),(p2:p2s)) = if p1==p2 then False else noDupes (p1s,p2s)
+        noDupes (h1,h2) = 
+            if (length h1)==(length h2) then
+                all id ([(not $ c `elem` h2)&&(occursOnce h1 c) | c <- h1]++[(not $ c `elem` h1)&&(occursOnce h2 c) | c <- h2])
+            else error "lists are of unequal length"
 
---testWar :: Grader String
---testWar = assess "war" 0 $ do 
+testWar :: Grader String
+testWar = assess "war" 0 $ do
+        check "that one side can win a war" $ war warGame2 3 ([],[]) `shouldBe`
+            ([(Jack,Hearts),(Ace,Hearts),(Two,Hearts),(Seven,Hearts),(King,Hearts),(Two,Diamonds),(Seven,Clubs),(Six,Clubs)],[(Nine,Diamonds),(Eight,Diamonds)])
+        check "that a war can continue" $ war warGame2 1 ([],[]) `shouldBe`
+            ([(Jack,Hearts),(Ace,Hearts),(Two,Hearts),(Seven,Hearts),(King,Hearts),(Two,Diamonds),(Seven,Clubs),(Six,Clubs)],[(Nine,Diamonds),(Eight,Diamonds)])
+        check "that one-card hands return empty lists" $ war warGame1 3 ([],[]) `shouldBe` ([],[])
 
 testPlay :: Grader String
 testPlay = assess "play" 0 $ do 
@@ -41,6 +50,7 @@ testPlay = assess "play" 0 $ do
 tree :: Grader String
 tree = describe "War" $ do
         testDeal
+        testWar
         testPlay
 
 runTests :: Int -> Bool -> IO ()

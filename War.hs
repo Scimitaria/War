@@ -37,27 +37,28 @@ deal deck p1 p2 =
         newDeck = [card | card <- deck,(not $ card `elem` new1),(not $ card `elem` new2)]
     in  deal newDeck new1 new2
 
-war :: Game -> Int -> Game
-war (p1,p2) size
-    | card1 > card2 = (l1++w1++w2,l2)
-    | card1 < card2 = (l1,l2++w2++w1)
+war :: Game -> Int -> Game -> Game
+war (p1,p2) size (p3,p4)
+    | card1 > card2 = (full1,l2)
+    | card1 < card2 = (l1,full2)
     | otherwise =
         case (null l1,null l2) of
-            (True,True)   -> ([],[])
-            (True,False)  -> ([],l2++w2++w1)
-            (False,True)  -> (l1++w1++w2,[])
-            (False,False) -> war (l1,l2) size
+            (True,True)   -> ([],[]++p4++p3)
+            (True,False)  -> ([]++p3,full2)
+            (False,True)  -> (full1,[]++p4)
+            (False,False) -> war (l1,l2) size (p3++w1,p4++w2)
     where
-        (l1,l2) = (drop (length w1) p1,drop (length w2) p2)
         getWarCards :: Hand -> Hand
         getWarCards hand 
           | (length hand) >= size = take size hand
           | otherwise = hand
         (w1,w2) = (getWarCards p1,getWarCards p2)
+        (l1,l2) = (drop (length w1) p1,drop (length w2) p2)
+        (full1,full2) = (l1++p3++w1++p4++w2,l2++p4++w2++p3++w1)
         (card1,card2) = (getCardVal $ last w1,getCardVal $ last w2)
 play :: Game -> Int -> Game
 play game@(h1@(p1:p1s),h2@(p2:p2s)) warSize
     | card1>card2 = (p1s++[p1,p2],[card | card <- h2,card /= p2])
     | card2>card1 = ([card | card <- h1,card /= p1],p2s++[p2,p1])
-    | otherwise = war game warSize
+    | otherwise = war game warSize ([],[])
     where (card1,card2) = (getCardVal p1,getCardVal p2)

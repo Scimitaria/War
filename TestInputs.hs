@@ -23,3 +23,10 @@ testGame1 = ([(Two,Hearts)],[(Four,Diamonds)])
 
 testGame2 :: Game
 testGame2 = ([(Four,Hearts)],[(Two,Diamonds)])
+
+warGame1 :: Game
+warGame1 = ([(Four,Hearts)],[(Four,Diamonds)])
+
+warGame2 :: Game
+warGame2 = ([(Two,Hearts),(Seven,Hearts),(King,Hearts),(Jack,Hearts),(Ace,Hearts)],
+            [(Two,Diamonds),(Seven,Clubs),(Six,Clubs),(Nine,Diamonds),(Eight,Diamonds)])
