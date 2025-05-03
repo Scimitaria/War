@@ -15,6 +15,9 @@ options = [ Option ['v'] ["verbose"]       (NoArg Verbose)          "Pretty-prin
           , Option ['h'] ["help"]          (NoArg Help)             "Print usage information and exit."
           ]
 
+numAces :: Game -> (Int,Int)
+numAces (p1,p2) = (length [card | card@(Ace,_) <- p1],length [card | card@(Ace,_) <- p2])
+
 main :: IO ()
 main = do
     args <- getArgs
@@ -22,4 +25,5 @@ main = do
     if (Help `elem` flags) || (not $ null errors)
     then putStrLn $ usageInfo "War [options] [filename] card game." options
     else if Test `elem` flags then runTests 1 True
-    else putStrLn $ show $ deck
+    else do let game = deal deck [] []
+            putStrLn $ show $ numAces game
