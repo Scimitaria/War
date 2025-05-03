@@ -43,6 +43,14 @@ play game@(h1@(p1:p1s),h2@(p2:p2s)) =
         card2 = getCardVal p2
         war :: Game -> Game
         war game = undefined
-    in  if      card1>card2 then (p2:h1,[card | card <- h2,card /= p2])
-        else if card2>card1 then ([card | card <- h1,card /= p1],p1:h2)
+    in  if      card1>card2 then (h1++[p2],[card | card <- h2,card /= p2])
+        else if card2>card1 then ([card | card <- h1,card /= p1],h2++[p1])
         else war game
+
+runGame :: Game -> IO ()
+runGame ([],[]) = putStrLn "tie"
+runGame (_,[])  = putStrLn "p1 wins"
+runGame ([],_)  = putStrLn "p2 wins"
+runGame (p1,p2) = do
+    putStrLn ((show $ length p1) ++ "," ++ (show $ length p2))
+    runGame $ play (p1,p2)
