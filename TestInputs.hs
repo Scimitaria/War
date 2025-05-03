@@ -17,3 +17,9 @@ deck = [(Two,Hearts),(Two,Diamonds),(Two,Clubs),(Two,Spades),
         (Queen,Hearts),(Queen,Diamonds),(Queen,Clubs),(Queen,Spades),
         (King,Hearts),(King,Diamonds),(King,Clubs),(King,Spades),
         (Ace,Hearts),(Ace,Diamonds),(Ace,Clubs),(Ace,Spades)]
+
+testGame1 :: Game
+testGame1 = ([(Two,Hearts)],[(Four,Diamonds)])
+
+testGame2 :: Game
+testGame2 = ([(Four,Hearts)],[(Two,Diamonds)])

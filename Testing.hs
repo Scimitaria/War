@@ -28,10 +28,17 @@ testDeal = assess "deal" 0 $ do
         noDupes (_,[])  = error "lists are of unequal length"
         noDupes ((p1:p1s),(p2:p2s)) = if p1==p2 then False else noDupes (p1s,p2s)
 
+testPlay :: Grader String
+testPlay = assess "play" 0 $ do 
+    check "that play replaces cards"   $ (length p11,length p21) `shouldBe` (0,2)
+    check "that play replaces cards 2" $ (length p12,length p22) `shouldBe` (2,0)
+    where (p11,p21) = play testGame1
+          (p12,p22) = play testGame2
+
 tree :: Grader String
-tree = describe "War" $
-    do describe "War" $ do
+tree = describe "War" $ do
         testDeal
+        testPlay
 
 runTests :: Int -> Bool -> IO ()
 runTests verb force = do
