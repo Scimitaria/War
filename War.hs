@@ -39,16 +39,16 @@ deal deck p1 p2 =
 
 war :: Game -> Int -> Game
 war (p1,p2) size
-    | card1 > card2 = (p1++w2,drop (length w2) p2)
-    | card1 < card2 = (drop (length w1) p1,p2++w1)
+    | card1 > card2 = (l1++w1++w2,l2)
+    | card1 < card2 = (l1,l2++w2++w1)
     | otherwise =
-        let (l1,l2) = (drop (length w1) p1,drop (length w2) p2)
-        in case (null l1,null l2) of
+        case (null l1,null l2) of
             (True,True)   -> ([],[])
-            (True,False)  -> ([],p2++w1)
-            (False,True)  -> (p1++w2,[])
+            (True,False)  -> ([],l2++w2++w1)
+            (False,True)  -> (l1++w1++w2,[])
             (False,False) -> war (l1,l2) size
     where
+        (l1,l2) = (drop (length w1) p1,drop (length w2) p2)
         getWarCards :: Hand -> Hand
         getWarCards hand 
           | (length hand) >= size = take size hand
@@ -57,15 +57,7 @@ war (p1,p2) size
         (card1,card2) = (getCardVal $ last w1,getCardVal $ last w2)
 play :: Game -> Int -> Game
 play game@(h1@(p1:p1s),h2@(p2:p2s)) warSize
-    | card1>card2 = (h1++[p2],[card | card <- h2,card /= p2])
-    | card2>card1 = ([card | card <- h1,card /= p1],h2++[p1])
+    | card1>card2 = (p1s++[p1,p2],[card | card <- h2,card /= p2])
+    | card2>card1 = ([card | card <- h1,card /= p1],p2s++[p2,p1])
     | otherwise = war game warSize
     where (card1,card2) = (getCardVal p1,getCardVal p2)
-
-runGame :: Game -> Int -> IO ()
-runGame ([],[]) _ = putStrLn "tie"
-runGame (_,[])  _ = putStrLn "p1 wins"
-runGame ([],_)  _ = putStrLn "p2 wins"
-runGame (p1,p2) warSize = do
-    putStrLn ((show $ length p1) ++ "," ++ (show $ length p2))
-    runGame (play (p1,p2) warSize) warSize

@@ -28,6 +28,9 @@ testDeal = assess "deal" 0 $ do
         noDupes (_,[])  = error "lists are of unequal length"
         noDupes ((p1:p1s),(p2:p2s)) = if p1==p2 then False else noDupes (p1s,p2s)
 
+--testWar :: Grader String
+--testWar = assess "war" 0 $ do 
+
 testPlay :: Grader String
 testPlay = assess "play" 0 $ do 
     check "that play replaces cards"   $ (length p11,length p21) `shouldBe` (0,2)
