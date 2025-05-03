@@ -3,7 +3,7 @@ import War
 import Data.List
 
 --assemble w/ [(a,b) | a <- [Two,Three,Four,Five,Six,Seven,Eight,Nine,Ten,Jack,Queen,King,Ace],b <- [Hearts,Diamonds,Clubs,Spades]]
-deck :: Game
+deck :: Deck
 deck = [(Two,Hearts),(Two,Diamonds),(Two,Clubs),(Two,Spades),
         (Three,Hearts),(Three,Diamonds),(Three,Clubs),(Three,Spades),
         (Four,Hearts),(Four,Diamonds),(Four,Clubs),(Four,Spades),

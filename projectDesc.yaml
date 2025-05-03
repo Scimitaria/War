@@ -1,0 +1,6 @@
+srcFile : War.hs
+exeFile : war
+
+builtIns: []
+
+borings: []
