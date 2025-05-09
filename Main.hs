@@ -29,16 +29,28 @@ getSize (Size s:_) =
         _ -> 4
 getSize (_:fs) = getSize fs
 
-runGame :: Game -> Int -> IO ()
-runGame ([],[]) _ = putStrLn "tie"
-runGame (_,[])  _ = putStrLn "p1 wins"
-runGame ([],_)  _ = putStrLn "p2 wins"
+runGame :: Game -> Int -> IO String
+runGame ([],[]) _ = do
+    putStrLn "tie"
+    return "tie"
+runGame (_,[])  _ = do
+    putStrLn "p1 wins"
+    return "p1"
+runGame ([],_)  _ = do
+    putStrLn "p2 wins"
+    return "p2"
 runGame (p1,p2) warSize = runGame (play (p1,p2) warSize) warSize
 
-runGameV :: Game -> Int -> IO ()
-runGameV ([],[]) _ = putStrLn "tie"
-runGameV (_,[])  _ = putStrLn "p1 wins"
-runGameV ([],_)  _ = putStrLn "p2 wins"
+runGameV :: Game -> Int -> IO String
+runGameV ([],[]) _ = do
+    putStrLn "tie"
+    return "tie"
+runGameV (_,[])  _ = do
+    putStrLn "p1 wins"
+    return "p1"
+runGameV ([],_)  _ = do
+    putStrLn "p2 wins"
+    return "p2"
 runGameV (h1@(p1:_),h2@(p2:_)) warSize = do
     putStrLn ((show $ length h1) ++ "," ++ (show $ length h2))
     putStrLn ((showCard p1) ++ "," ++ (showCard p2))
@@ -62,16 +74,24 @@ main :: IO ()
 main = do
     args <- getArgs
     let (flags, inputs, errors) = getOpt Permute options args
+        c = ","
     if (Help `elem` flags) || (not $ null errors)
     then putStrLn $ usageInfo "War [options] [filename] card game." options
     else if Test `elem` flags then runTests 1 True
     else do let game = deal deck [] []
                 size = getSize flags
             putStrLn $ show $ numAces game
-            if Verbose `elem` flags then runGameV game size
-            else runGame game size
-            let warSize = show size
-                (aces1,aces2) = (show a, show b)
-                    where (a,b) = numAces game
-                dat = warSize++","++aces1++","++aces2++"\n"
-            appendFile "data.csv" dat
+            if Verbose `elem` flags then do
+                res <- runGameV game size
+                let warSize = show size
+                    (a,b) = numAces game
+                    (aces1,aces2) = (show a, show b)
+                    dat = warSize++c++aces1++c++aces2++c++res++"\n"
+                appendFile "data.csv" dat
+            else do
+                res <- runGame game size
+                let warSize = show size
+                    (a,b) = numAces game
+                    (aces1,aces2) = (show a, show b)
+                    dat = warSize++c++aces1++c++aces2++c++res++"\n"
+                appendFile "data.csv" dat
