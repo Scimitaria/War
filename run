@@ -3,6 +3,10 @@
 #clear csv
 : > data.csv
 
+make
 #run war
 for i in {0..99}
     ./war
+
+javac read.java
+java read

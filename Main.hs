@@ -70,5 +70,8 @@ main = do
             putStrLn $ show $ numAces game
             if Verbose `elem` flags then runGameV game size
             else runGame game size
-            let dat = (show size)++","++(show $ numAces game)++"\n"
+            let warSize = show size
+                (aces1,aces2) = (show a, show b)
+                    where (a,b) = numAces game
+                dat = warSize++","++aces1++","++aces2++"\n"
             appendFile "data.csv" dat
