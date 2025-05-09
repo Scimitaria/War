@@ -22,11 +22,11 @@ numAces :: Game -> (Int,Int)
 numAces (p1,p2) = (length [card | card@(Ace,_) <- p1],length [card | card@(Ace,_) <- p2])
 
 getSize :: [Flag] -> Int
-getSize [] = 3
+getSize [] = 4
 getSize (Size s:_) = 
     case readMaybe s of
         Just size -> size
-        _ -> 3
+        _ -> 4
 getSize (_:fs) = getSize fs
 
 runGame :: Game -> Int -> IO ()
@@ -43,7 +43,20 @@ runGameV (h1@(p1:_),h2@(p2:_)) warSize = do
     putStrLn ((show $ length h1) ++ "," ++ (show $ length h2))
     putStrLn ((showCard p1) ++ "," ++ (showCard p2))
     if (getCardVal p1) == (getCardVal p2) then putStrLn "war!" else return ()
+    putStrLn ""--line between plays
     runGameV (play (h1,h2) warSize) warSize
+{-info to log:
+--# of aces
+--war size
+--winner
+--Average number of hands played per game.
+--Average number of Wars per game.
+--Average number of 2-level Wars per game.
+--Average number of 3+ level Wars per game.
+--Largest War Ever.
+--Fastest War Ever (fewest hands played)
+--Longest War Ever (most hands played)
+-}
 
 main :: IO ()
 main = do
@@ -54,5 +67,8 @@ main = do
     else if Test `elem` flags then runTests 1 True
     else do let game = deal deck [] []
                 size = getSize flags
+            putStrLn $ show $ numAces game
             if Verbose `elem` flags then runGameV game size
             else runGame game size
+            let dat = (show size)++","++(show $ numAces game)++"\n"
+            appendFile "data.csv" dat
