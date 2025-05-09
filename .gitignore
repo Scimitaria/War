@@ -1,5 +1,6 @@
 war
 war.exe
+*.class
 dist
 dist-*
 cabal-dev
