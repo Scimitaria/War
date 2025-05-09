@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+#clear csv
+: > data.csv
+
+#run war
+for i in {0..99}
+    ./war

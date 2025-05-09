@@ -46,8 +46,8 @@ runGameV (h1@(p1:_),h2@(p2:_)) warSize = do
     putStrLn ""--line between plays
     runGameV (play (h1,h2) warSize) warSize
 {-info to log:
---# of aces
---war size
+--# of aces  x
+--war size   x
 --winner
 --Average number of hands played per game.
 --Average number of Wars per game.
