@@ -3,9 +3,11 @@
 #clear csv
 : > data.csv
 
+reps=${1:-99}
+
 make
 #run war
-for i in {0..99}
+for i in {1..$reps}
     ./war
 
 javac read.java

@@ -31,13 +31,13 @@ getSize (_:fs) = getSize fs
 
 runGame :: Game -> Int -> IO String
 runGame ([],[]) _ = do
-    putStrLn "tie"
+    --putStrLn "tie"
     return "tie"
 runGame (_,[])  _ = do
-    putStrLn "p1 wins"
+    --putStrLn "p1 wins"
     return "p1"
 runGame ([],_)  _ = do
-    putStrLn "p2 wins"
+    --putStrLn "p2 wins"
     return "p2"
 runGame (p1,p2) warSize = runGame (play (p1,p2) warSize) warSize
 
@@ -57,18 +57,6 @@ runGameV (h1@(p1:_),h2@(p2:_)) warSize = do
     if (getCardVal p1) == (getCardVal p2) then putStrLn "war!" else return ()
     putStrLn ""--line between plays
     runGameV (play (h1,h2) warSize) warSize
-{-info to log:
---# of aces  x
---war size   x
---winner
---Average number of hands played per game.
---Average number of Wars per game.
---Average number of 2-level Wars per game.
---Average number of 3+ level Wars per game.
---Largest War Ever.
---Fastest War Ever (fewest hands played)
---Longest War Ever (most hands played)
--}
 
 main :: IO ()
 main = do
@@ -80,7 +68,6 @@ main = do
     else if Test `elem` flags then runTests 1 True
     else do let game = deal deck [] []
                 size = getSize flags
-            putStrLn $ show $ numAces game
             if Verbose `elem` flags then do
                 res <- runGameV game size
                 let warSize = show size
