@@ -31,7 +31,7 @@ getSize (_:fs) = getSize fs
 
 runGame :: Game -> Int -> IO String
 runGame ([],[]) _ = do
-    --putStrLn "tie"
+    putStrLn "tie"
     return "tie"
 runGame (_,[])  _ = do
     --putStrLn "p1 wins"

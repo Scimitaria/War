@@ -3,12 +3,33 @@
 #clear csv
 : > data.csv
 
+#Number of times to run war
 reps=${1:-99}
 
-make
-#run war
-for i in {1..$reps}
-    ./war
+#analyze the data
+function analyze {
+    #set war size
+    size=${1:-5}
 
-javac read.java
-java read
+    #run war
+    for i in {1..$reps}
+        ./war -s $size
+
+    #compile parser
+    javac read.java
+
+    #run parser
+    java read
+
+    #clear csv
+    : > data.csv
+}
+
+#compile war
+make
+
+analyze 2
+analyze 3
+analyze 4
+analyze 5
+analyze 6
