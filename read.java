@@ -1,6 +1,9 @@
 import java.util.List;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 
@@ -26,7 +29,7 @@ public class read{
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
 
         //wins per # of aces
         Double a0Wins = 0.0;
@@ -35,8 +38,16 @@ public class read{
         Double a3Wins = 0.0;
         Double a4Wins = 0.0;
 
+        Path cache = Paths.get("./cache.txt");
+
         //size of war
         String size = "";
+        try{
+            String contents = Files.readString(cache);
+            size = contents == null ? "" : contents;
+        }catch(IOException e){
+            throw new IOException(e);
+        }
 
         //read file
         try (BufferedReader br = new BufferedReader(new FileReader("data.csv"))) {
@@ -44,9 +55,10 @@ public class read{
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
 
-                //debug csv parsing
-                if(!values[0].equals(size))System.out.println("new:" + values[0] + "  old:" + size);
-                size=values[0];
+                /*debug csv parsing
+                var val = values[0];
+                if(!val.equals(size))System.out.println("new:" + val + "  old:" + size);
+                Files.writeString(cache,val);*/
 
                 //update win counters based on game data
                 int index=parseWinner(values[3]);

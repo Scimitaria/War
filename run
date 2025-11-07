@@ -28,8 +28,10 @@ function analyze {
 #compile war
 make
 
+: > cache.txt
 analyze 2
 analyze 3
 analyze 4
 analyze 5
 analyze 6
+: > cache.txt
